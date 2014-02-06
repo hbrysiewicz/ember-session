@@ -4,22 +4,31 @@
 var ES = Ember.Namespace.create({
   VERSION: '0.0.1',
 
-  authenticationEndpoint: '/login',
+  // Endpoint to send auth credentials
+  authEndpoint: '/login',
 
-  routeAfterAuthentication: 'campaigns.index',
+  // Endpoint to send new signups
+  signupEndpoint: '/signup',
 
-  authenticationRoute: 'login',
+  // Endpoint to reload the session data
+  reloadSessionEndpoint: '/reload',
 
+  // Route to go to after successful login
+  routeAfterAuth: 'campaigns.index',
+
+  // Login route
+  authRoute: 'login',
+
+  // Session placeholder
   session: null,
 
   setup: function(app, options) {
-
-    options                       = options || {};
-    this.routeAfterAuthentication = options.routeAfterAuthentication || this.routeAfterAuthentication;
-    this.authenticationRoute      = options.authenticationRoute || this.authenticationRoute;
+    options               = options || {};
+    this.routeAfterAuth   = options.routeAfterAuth || this.routeAfterAuth;
+    this.authRoute        = options.authRoute || this.authRoute;
 
     // Settup the session object
-    this.session = ES.Session.create();
+    this.session          = ES.Session.create();
 
     // Register the session
     app.register('session:current', this.session, { instantiate: false, singleton: true });
@@ -58,6 +67,8 @@ var ES = Ember.Namespace.create({
 
 });
 
+
+// Register Lib
 if (Ember.libraries) {
   Ember.libraries.registerCoreLibrary('Ember Session', ES.VERSION);
 }
@@ -68,13 +79,13 @@ ES.Session = Ember.Object.extend();
 
 
 // Application Route Mixin
-ES.ApplicationRouteMixin = Ember.Mixin.create(ES.AuthenticationMixin, {
+ES.ApplicationRouteMixin = Ember.Mixin.create({
 
   authenticate: function() {
     var self = this;
 
     // Reload the account into the session
-    Ember.$.getJSON(window.APIURL + '/reload/' + localStorage.accountEmail).then(function(response){
+    Ember.$.getJSON(window.APIURL + ES.reloadSessionEndpoint + localStorage.accountEmail).then(function(response){
 
       if(response.sucess){
 
@@ -88,7 +99,7 @@ ES.ApplicationRouteMixin = Ember.Mixin.create(ES.AuthenticationMixin, {
         ES.socketSetup(response.account.id);
 
       } else {
-        self.transitionToRoute(ES.authenticationRoute);
+        self.transitionToRoute(ES.authRoute);
       }
 
     });
@@ -126,51 +137,55 @@ ES.AuthenticatedRouteMixin = Ember.Mixin.create({
 // Signup Mixin
 ES.SignupControllerMixin = Ember.Mixin.create({
 
-  signup: function() {
-    var self = this, data = this.getProperties('first_name', 'last_name', 'email', 'phone');
+  actions: {
 
-    self.set('errorMessage', null);
+    signup: function() {
+      var self = this, data = this.getProperties('first_name', 'last_name', 'email', 'phone');
 
-    Ember.$.post(window.URL + '/signup', data).then(function(response) {
+      self.set('errorMessage', null);
 
-      if (response.success) {
+      Ember.$.post(window.URL + ES.signupEndpoint, data).then(function(response) {
 
-        localStorage.accountEmail = response.account.email;
-        localStorage.token = response.token;
+        if (response.success) {
 
-        // Set the token in the session
-        self.session.set('token', response.token);
+          localStorage.accountEmail = response.account.email;
+          localStorage.token = response.token;
 
-        // Set the account in the session
-        self.session.set('account', response.account);
+          // Set the token in the session
+          self.session.set('token', response.token);
 
-        // Set up websocket events
-        ES.socketSetup();
+          // Set the account in the session
+          self.session.set('account', response.account);
 
-        self.transitionToRoute('campaigns.index');
+          // Set up websocket events
+          ES.socketSetup(response.account.id);
 
-      } else {
-        self.set('errorMessage', response.message);
-      }
+          self.transitionToRoute(ES.routeAfterAuth);
 
-    });
-  },
+        } else {
+          self.set('errorMessage', response.message);
+        }
 
-  resetSignup: function() {
-    this.setProperties({
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      errorMessage: ""
-    });
+      });
+    },
+
+    resetSignup: function() {
+      this.setProperties({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        errorMessage: ""
+      });
+    }
+
   }
 
 });
 
 
 // Login Mixin
-ES.LoginControllerMixin = Ember.Mixin.create(ES.AuthenticationMixin, {
+ES.LoginControllerMixin = Ember.Mixin.create({
 
   actions: {
 
@@ -181,7 +196,7 @@ ES.LoginControllerMixin = Ember.Mixin.create(ES.AuthenticationMixin, {
 
       console.log('asdfasdf');
 
-      Ember.$.post(window.URL + ES.authenticationEndpoint, data).then(function(response) {
+      Ember.$.post(window.URL + ES.authEndpoint, data).then(function(response) {
 
         if (response.success) {
 
@@ -198,7 +213,7 @@ ES.LoginControllerMixin = Ember.Mixin.create(ES.AuthenticationMixin, {
           // Set up the sockets 
           ES.socketSetup();
 
-          self.transitionToRoute(ES.routeAfterAuthentication);
+          self.transitionToRoute(ES.routeAfterAuth);
 
         } else {
           self.set('errorMessage', response.message);
@@ -229,5 +244,4 @@ ES.LoginControllerMixin = Ember.Mixin.create(ES.AuthenticationMixin, {
 ES.LogoutMixin = Ember.Mixin.create({
 
 });
-
 
