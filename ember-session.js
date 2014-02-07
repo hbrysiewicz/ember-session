@@ -13,19 +13,22 @@ var ES = Ember.Namespace.create({
   // Endpoint to reload the session data
   reloadSessionEndpoint: '/reload',
 
-  // Route to go to after successful login
-  routeAfterAuth: 'campaigns.index',
-
   // Login route
-  authRoute: 'login',
+  loginRoute: 'login',
+
+  // Route to go to after successful login
+  routeAfterLogin: 'campaigns.index',
+
+  // Route to go to after successful signup
+  routeAfterSignup: 'welcome',
 
   // Session placeholder
   session: null,
 
   setup: function(app, options) {
     options               = options || {};
-    this.routeAfterAuth   = options.routeAfterAuth || this.routeAfterAuth;
-    this.authRoute        = options.authRoute || this.authRoute;
+    this.routeAfterLogin   = options.routeAfterLogin || this.routeAfterLogin;
+    this.loginRoute        = options.loginRoute || this.loginRoute;
 
     // Settup the session object
     this.session          = ES.Session.create();
@@ -71,7 +74,7 @@ ES.ApplicationRouteMixin = Ember.Mixin.create({
         self.session.set('account', response.account);
 
       } else {
-        self.transitionToRoute(ES.authRoute);
+        self.transitionToRoute(ES.loginRoute);
       }
 
     });
@@ -103,7 +106,7 @@ ES.AuthenticatedRouteMixin = Ember.Mixin.create({
   redirectToLogin: function(transition) {
     var loginController = this.controllerFor('login');
     loginController.set('attemptedTransition', transition);
-    this.transitionTo(ES.authRoute);
+    this.transitionTo(ES.loginRoute);
   }
 
 });
@@ -128,7 +131,7 @@ ES.SignupControllerMixin = Ember.Mixin.create({
           // Set the account in the session
           self.session.set('account', response.account);
 
-          self.transitionToRoute(ES.routeAfterAuth);
+          self.transitionToRoute(ES.routeAfterSignup);
 
         } else {
           self.set('errorMessage', response.message);
@@ -172,7 +175,7 @@ ES.LoginControllerMixin = Ember.Mixin.create({
           // Set the account in the session
           self.session.set('account', response.account);
 
-          self.transitionToRoute(ES.routeAfterAuth);
+          self.transitionToRoute(ES.routeAfterLogin);
 
         } else {
           self.set('errorMessage', response.message);
@@ -208,7 +211,7 @@ ES.LogoutRouteMixin = Ember.Mixin.create({
 
     Ember.$.post(window.URL + ES.signupEndpoint, data).then(function(response) {
 
-
+        
     });
 
   },
@@ -216,7 +219,7 @@ ES.LogoutRouteMixin = Ember.Mixin.create({
   redirectToLogin: function(transition) {
     var loginController = this.controllerFor('login');
     loginController.set('attemptedTransition', transition);
-    this.transitionTo(ES.authRoute);
+    this.transitionTo(ES.loginRoute);
   }
 
 });
