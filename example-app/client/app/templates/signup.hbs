@@ -1,0 +1,117 @@
+<div class="container">
+	
+	<div class="row">
+		
+		<div class="column left">
+			<h1>High-Quality Targeted Leads</h1>
+			<p class="lead">Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Aenean lacinia bibendum nulla sed consectetur.</p>
+			<div class="features">
+				<div class="feature targeted-campaigns">
+					<div class="icon"></div>
+					<div class="content">
+						<h2>Targeted Campaigns</h2>
+						<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam id dolor id nibh ultricies vehicula ut id elit. Lorem ipsum dolor sit amet.</p>
+					</div>
+				</div>
+				<div class="feature crm-integration">
+					<div class="icon"></div>
+					<div class="content">
+						<h2>CRM Integration</h2>
+						<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam id dolor id nibh ultricies vehicula ut id elit. Lorem ipsum dolor sit amet.</p>
+					</div>
+				</div>
+				<div class="feature intuitive-interface">
+					<div class="icon"></div>
+					<div class="content">
+						<h2>Intuitive Interface</h2>
+						<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam id dolor id nibh ultricies vehicula ut id elit. Lorem ipsum dolor sit amet.</p>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="column right">
+			 
+			<div class="box">
+				
+				<div class="banner">
+					<div class="shadow"></div>
+					<div class="fold-left"></div>
+					<div class="fold-right"></div>
+					<h2>Sign Up Now and Get 10 Free Leads!</h2>
+				</div>
+
+				<p class="deal">We want you to experience the best lead generation tool the Internet has to offer.  Just fill out the form below to get started!  As a bonus for signing up, we'll give you <em>10 free leads</em> to jump start your campaigns!</p>
+
+				<form name="signup" id="form-signup" class="shadowed" method="post" action="">
+
+					{{#if errorMessage}}
+						<div class="alert alert-danger">{{errorMessage}}</div>
+					{{/if}}
+					
+					<div class="control-group horizontal">
+						<label class="control-label" for="full_name">Full Name:</label>
+						<div class="controls">
+							{{input name="first_name" value=first_name type="text" class="text half" id="form-signup--first_name" placeholder="First"}}
+							{{input name="last_name" value=last_name type="text" class="text half last" id="form-signup--last_name" placeholder="Last"}}
+						</div>
+					</div>
+
+					<div class="control-group horizontal">
+						<label class="control-label" for="email">Email:</label>
+						<div class="controls">
+							{{input name="email" value=email type="text" class="text email" id="form-signup--email" placeholder="Email Address"}}
+						</div>
+					</div>
+
+					<div class="control-group horizontal">
+						<label class="control-label" for="phone">Phone:</label>
+						<div class="controls">
+							{{input name="phone" value=phone type="text" class="text phone" id="form-signup--phone" placeholder="Phone Number"}}
+						</div>
+					</div>
+
+					<div class="control-group horizontal">
+						<label class="control-label">I want<br />leads for:</label>
+						<div class="controls">
+							<div class="checks">
+								<label><input type="checkbox" name="lead_types[]" id="form-signup-lead_types-1">Auto</label>
+								<label><input type="checkbox" name="lead_types[]" id="form-signup-lead_types-2">Health</label>
+								<label><input type="checkbox" name="lead_types[]" id="form-signup-lead_types-3">Medicaid</label>
+							</div>
+							<div class="checks">
+								<label><input type="checkbox" name="lead_types[]" id="form-signup-lead_types-4">Life</label>
+								<label><input type="checkbox" name="lead_types[]" id="form-signup-lead_types-5">Home</label>
+								<label><input type="checkbox" name="lead_types[]" id="form-signup-lead_types-6">Renter/Condo</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<div class="controls">
+							<button type="submit" class="btn large submit" {{action 'signup'}}>Give Me My 10 Free Leads <i class="fa fa-chevron-right"></i></button>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<div class="modals">
+  
+  <div id="modal-processing" class="modal">
+    <div class="content">
+      <div class="loader"></div>
+      <h2>Creating Your Account</h2>
+      <h3>This should only take a few seconds...</h3>
+    </div>
+  </div>
+
+</div>

@@ -37,32 +37,6 @@ var ES = Ember.Namespace.create({
     Ember.A(['model', 'controller', 'view', 'route', 'component']).forEach(function(component) {
       app.inject(component, 'session', 'session:current');
     });
-  },
-
-  socketSetup: function(accountId) {
-    self = this;
-
-    // Register account with socket server
-    socket.emit('adduser', accountId);
-
-    // Listen to websockets messages broadcast
-    socket.on('messages', function (data) {
-      //favicon.badge(self.session.get('messages') + 1);
-      self.session.set('messages', self.session.get('messages')._data.push(data));
-    });
-
-    // Listen to websockets notifications broadcast
-    socket.on('notifications', function (data) {
-      //favicon.badge(self.session.get('notifications') + 1);
-      self.session.set('notifications', self.session.get('notifications')._data.push(data));
-    });
-
-    // Listen to websockets purchase broadcast
-    self.session.set('purchasesCount', 0);
-    socket.on('purchase', function (data) {
-      self.session.set('purchasesCount', self.session.get('purchasesCount') + 1);
-    });
-
   }
 
 });
@@ -85,18 +59,16 @@ ES.ApplicationRouteMixin = Ember.Mixin.create({
     var self = this;
 
     // Reload the account into the session
-    Ember.$.getJSON(window.APIURL + ES.reloadSessionEndpoint + localStorage.accountEmail).then(function(response){
+    Ember.$.ajax({
+      url: window.URL + ES.reloadSessionEndpoint,
+      type: 'GET',
+      async: false
+    }).then(function(response){
 
-      if(response.sucess){
-
-        // Set the token in the session
-        self.session.set('token', localStorage.token);
+      if(response.success){
 
         // Set the account in the session
         self.session.set('account', response.account);
-
-        // Set up websocket events
-        ES.socketSetup(response.account.id);
 
       } else {
         self.transitionToRoute(ES.authRoute);
@@ -109,7 +81,7 @@ ES.ApplicationRouteMixin = Ember.Mixin.create({
     var self = this;
 
     // Check for Token
-    if (localStorage.token) {
+    if (localStorage.account) {
       self.authenticate();
     }
   }
@@ -120,15 +92,18 @@ ES.ApplicationRouteMixin = Ember.Mixin.create({
 ES.AuthenticatedRouteMixin = Ember.Mixin.create({
 
   beforeModel: function(transition) {
-    if (!this.session.get('token')) {
+
+    if (!this.session.get('account')) {
+
       this.redirectToLogin(transition);
+
     }
   },
 
   redirectToLogin: function(transition) {
     var loginController = this.controllerFor('login');
     loginController.set('attemptedTransition', transition);
-    this.transitionTo('login');
+    this.transitionTo(ES.authRoute);
   }
 
 });
@@ -148,17 +123,10 @@ ES.SignupControllerMixin = Ember.Mixin.create({
 
         if (response.success) {
 
-          localStorage.accountEmail = response.account.email;
-          localStorage.token = response.token;
-
-          // Set the token in the session
-          self.session.set('token', response.token);
+          localStorage.account = response.account;
 
           // Set the account in the session
           self.session.set('account', response.account);
-
-          // Set up websocket events
-          ES.socketSetup(response.account.id);
 
           self.transitionToRoute(ES.routeAfterAuth);
 
@@ -194,24 +162,15 @@ ES.LoginControllerMixin = Ember.Mixin.create({
 
       self.set('errorMessage', null);
 
-      console.log('asdfasdf');
-
       Ember.$.post(window.URL + ES.authEndpoint, data).then(function(response) {
 
         if (response.success) {
 
-          // Store the token and account in localStorage
-          localStorage.accountEmail = response.account.email;
-          localStorage.token = response.token;
-
-          // Set the token in the session
-          self.session.set('token', response.token);
+          // Store the account in localStorage
+          localStorage.account = response.account;
 
           // Set the account in the session
           self.session.set('account', response.account);
-
-          // Set up the sockets 
-          ES.socketSetup();
 
           self.transitionToRoute(ES.routeAfterAuth);
 
@@ -241,7 +200,24 @@ ES.LoginControllerMixin = Ember.Mixin.create({
 
 
 // Logout Mixin
-ES.LogoutMixin = Ember.Mixin.create({
+ES.LogoutRouteMixin = Ember.Mixin.create({
+
+  beforeModel: function(transition) {
+
+    delete localStorage.account;
+
+    Ember.$.post(window.URL + ES.signupEndpoint, data).then(function(response) {
+
+
+    });
+
+  },
+
+  redirectToLogin: function(transition) {
+    var loginController = this.controllerFor('login');
+    loginController.set('attemptedTransition', transition);
+    this.transitionTo(ES.authRoute);
+  }
 
 });
 

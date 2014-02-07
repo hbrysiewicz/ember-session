@@ -1,0 +1,38 @@
+<div class="login-box">
+
+	<header>
+		<h1>Login</h1>
+	</header>
+
+	<div class="content">
+		{{#if errorMessage}}
+			<div class="alert alert-danger">{{errorMessage}}</div>
+		{{/if}}
+
+		<form name="login" id="form-login" {{action login on="submit"}}>
+
+			<!-- Username -->
+			<div class="control-group horizontal">
+				<label class="control-label" for="username">Username:</label>
+				<div class="controls">
+					{{input value=username type="text" class="text" id="form-login--username"}}
+				</div>
+			</div>
+
+			<!-- Password -->
+			<div class="control-group horizontal">
+				<label class="control-label" for="password">Password:</label>
+				<div class="controls">
+					{{input value=password type="password" placeholder="" class="text password" id="form-login--password"}}
+				</div>
+			</div>
+
+			<div class="control-group horizontal">
+				<div class="controls">
+					<button type="submit" class="btn submit">Login <i class="fa fa-chevron-right"></i></button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</div>
