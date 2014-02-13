@@ -18,6 +18,48 @@ If you want more features than Ember Session provides, file an issue. Feature re
 
 ```javascript
 
+// Main App.js
+
+// Init Ember Session
+Ember.Application.initializer({
+  name: 'session',
+  initialize: function(container, application) {
+    Ember.Session.setup(application);
+  }
+});
+
+// Create Application
+window.App = App = Ember.Application.create();
+
+
+// Login Controller
+App.LoginController = Ember.LoginController.extend({
+
+});
+
+// Logout Route
+App.LogoutRoute = Ember.LogoutRoute.extend({
+
+});
+
+// Application Route
+App.ApplicationRoute = Ember.ApplicationRoute.extend({
+
+});
+
+// Example Authenticated Route
+App.MessagesIndexRoute = Ember.AuthenticatedRoute.extend({
+    model: function() {
+      return App.Message.findAll();
+    }
+});
+
+// Signup Controller
+App.SignupController = Ember.SignupController.extend({
+
+});
+
+
 ```
 
 ## Building Ember Session
