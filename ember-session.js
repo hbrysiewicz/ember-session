@@ -1,8 +1,4 @@
-/**
-  All Ember Session methods and functions are defined inside of this namespace.
-*/
 var ES = Ember.Namespace.create({
-  VERSION: '0.0.1',
 
   // Endpoint to send auth credentials
   authEndpoint: '/login',
@@ -44,11 +40,6 @@ var ES = Ember.Namespace.create({
 
 });
 
-
-// Register Lib
-if (Ember.libraries) {
-  Ember.libraries.registerCoreLibrary('Ember Session', ES.VERSION);
-}
 
 
 // Session Object

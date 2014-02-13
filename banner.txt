@@ -1,0 +1,5 @@
+// ==========================================================================
+// Project:   Ember Session
+// Copyright: ©2013 Andrew Reedy and contributors.
+// License:   Licensed under MIT license (see license.js)
+// ==========================================================================
