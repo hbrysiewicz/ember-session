@@ -239,3 +239,5 @@ Ember.SignupController = Ember.Controller.extend({
 });
 
 })();
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/andrewreedy/ember-session/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
