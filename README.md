@@ -70,5 +70,3 @@ To build Ember Session, clone the repository, and run `npm install` to install b
 and `grunt` to build the library.
 
 Unminified and minified builds of Ember Session will be placed in the `dist` directory
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/andrewreedy/ember-session/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
