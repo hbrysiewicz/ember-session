@@ -23,7 +23,7 @@ If you want more features than Ember Session provides, file an issue. Feature re
 // Init Ember Session
 Ember.Application.initializer({
   name: 'session',
-  initialize: function(container, application) {
+  initialize: function (container, application) {
     Ember.Session.setup(application);
   }
 });
@@ -49,16 +49,15 @@ App.ApplicationRoute = Ember.ApplicationRoute.extend({
 
 // Example Authenticated Route
 App.MessagesIndexRoute = Ember.AuthenticatedRoute.extend({
-    model: function() {
-      return App.Message.findAll();
-    }
+  model: function () {
+    return this.store.find('message');
+  }
 });
 
 // Signup Controller
 App.SignupController = Ember.SignupController.extend({
 
 });
-
 
 ```
 
