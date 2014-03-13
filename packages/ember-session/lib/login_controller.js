@@ -35,10 +35,6 @@ Ember.LoginController = Ember.Controller.extend({
       })
     }
 
-  },
-
-  didInsertElement: function() {
-    this.reset();
   }
 
 });
